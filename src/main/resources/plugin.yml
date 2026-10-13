@@ -1,0 +1,17 @@
+name: StealCraft
+version: '${version}'
+main: de.stealcraft.plugin.StealCraftPlugin
+description: Team-Werkbank-Regeln für das StealCraft-Projekt
+author: StealCraft
+api-version: '26.3'
+
+commands:
+  stealcraft:
+    description: StealCraft-Teams und Werkbänke verwalten
+    usage: /sc hilfe
+    aliases: [sc]
+
+permissions:
+  stealcraft.admin:
+    description: Teams verwalten, Werkbänke geben, Spieler wiederbeleben
+    default: op

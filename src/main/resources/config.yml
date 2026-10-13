@@ -1,0 +1,16 @@
+# StealCraft – Einstellungen
+# Nach einer Änderung den Server neu starten.
+
+# Was passiert mit jemandem, der ohne Werkbank stirbt?
+#   BAN       = wird gebannt und vom Server geworfen (für das echte Projekt)
+#   ZUSCHAUER = bleibt als Zuschauer auf dem Server (praktisch zum Testen)
+ausscheiden: BAN
+
+# Soll im Chat stehen, WER eine Werkbank geklaut hat?
+#   false = alle sehen nur, dass die Werkbank von Team X weg ist
+#   true  = der Name des Diebs wird verraten
+dieb-verraten: false
+
+# Team-Werkbänke dürfen nicht in die Enderkiste,
+# weil man sie dort niemals klauen könnte.
+enderkiste-sperren: true
