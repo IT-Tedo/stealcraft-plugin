@@ -1,6 +1,12 @@
-# StealCraft-Plugin
+# StealCraft
 
-Paper-Plugin für Minecraft 26.3, das die Werkbank-Regel von StealCraft umsetzt.
+Paper-Plugin für Minecraft **26.3**, gebaut für das Minecraft-Projekt *StealCraft*:
+Jedes Team hat eine eigene Werkbank. Solange sie steht, kann das Team unendlich oft sterben.
+Wird sie geklaut, hat jeder nur noch ein Leben.
+
+[Neueste Version herunterladen](../../releases/latest) · [Änderungen](CHANGELOG.md) · [Fehler melden](../../issues/new/choose)
+
+---
 
 ## Die Regeln
 
@@ -10,7 +16,7 @@ Paper-Plugin für Minecraft 26.3, das die Werkbank-Regel von StealCraft umsetzt.
 - **Ist die Werkbank weg** (abgebaut, im Inventar, in einer Kiste), ist jeder Tod endgültig.
   Wer dann stirbt, scheidet aus und wird gebannt. Nur dieser Spieler, nicht das ganze Team.
 - Jeder darf jede Werkbank abbauen. Sie wird dann zu einem Item, das man behalten,
-  verstecken, tauschen oder zurückgeben kann (zum Beispiel gegen 20 Netherite-Barren).
+  verstecken, tauschen oder zurückgeben kann.
 - Nur das eigene Team kann seine Werkbank wieder aufstellen.
 - Stirbt jemand mit einer Werkbank im Inventar, wird sie ganz normal gedroppt.
 
@@ -24,23 +30,17 @@ Damit die Werkbank nie verloren geht:
 In der Tab-Liste steht vor jedem Namen ein Herz:
 **grün** = Werkbank steht, **rot** = nur noch ein Leben, **grau** = Regeln noch nicht aktiv, **☠** = ausgeschieden.
 
-## Plugin-Datei bekommen
+### Werkbank-Anzeige
 
-Die `.jar` wird automatisch auf GitHub gebaut:
+Alle 30 Minuten wird allen Spielern angezeigt, wo Werkbänke stehen, die **unter Y -30** oder **über Y 95** aufgestellt sind:
+Koordinaten im Chat, ein Glockenton und 60 Sekunden lang ein Lichtstrahl über der Werkbank.
+Das betroffene Team wird eine Minute vorher gewarnt. Werkbänke zwischen Y -30 und Y 95 werden nie angezeigt.
 
-1. Neues GitHub-Repository anlegen und diesen ganzen Ordner hochladen.
-2. Im Repository auf **Actions** gehen. Der Lauf „Plugin bauen“ startet von selbst.
-3. Wenn er grün ist, den Lauf öffnen und unten unter **Artifacts** „StealCraft-Plugin“ herunterladen.
-4. Darin liegt `StealCraft-1.0.0.jar`.
+## Installation
 
-Selbst bauen geht auch: Java 25 installieren und im Ordner `gradle build` ausführen.
-Die Datei liegt dann in `build/libs/`.
-
-## Installieren
-
-1. Der Server muss **Paper** (oder Purpur) für Minecraft 26.3 sein, kein Vanilla-Server.
-2. `StealCraft-1.0.0.jar` in den Ordner `plugins` des Servers legen.
-3. Server neu starten.
+1. Der Server muss **Paper** (oder ein Paper-Fork wie Purpur) für Minecraft 26.3 sein. Mit Vanilla funktionieren keine Plugins.
+2. Die `.jar` aus der [neuesten Version](../../releases/latest) herunterladen.
+3. In den Ordner `plugins` des Servers legen und den Server neu starten.
 4. Zum Testen in `plugins/StealCraft/config.yml` `ausscheiden: ZUSCHAUER` setzen,
    damit ihr euch nicht selbst bannt. Für das echte Projekt wieder auf `BAN` stellen.
 
@@ -48,18 +48,18 @@ Die Datei liegt dann in `build/libs/`.
 
 ```
 /sc team erstellen rot red
-/sc team hinzufügen rot DeinName
-/sc team hinzufügen rot FreundName
-/sc werkbank rot DeinName
+/sc team hinzufügen rot Spieler1
+/sc team hinzufügen rot Spieler2
+/sc werkbank rot Spieler1
 ```
 
 Die Spieler müssen einmal auf dem Server gewesen sein, bevor man sie einem Team hinzufügen kann.
 
-## Alle Befehle
+## Befehle
 
 | Befehl | Wer | Was |
 |---|---|---|
-| `/sc status` | alle | Teams, Mitglieder und Werkbank-Status anzeigen |
+| `/sc status` | alle | Teams, Mitglieder, Werkbank-Status und nächste Anzeige |
 | `/sc team erstellen <name> [farbe]` | OP | Team anlegen (Farben: red, blue, green, gold, aqua, …) |
 | `/sc team hinzufügen <name> <spieler>` | OP | Spieler in ein Team |
 | `/sc team entfernen <spieler>` | OP | Spieler aus seinem Team nehmen |
@@ -70,25 +70,54 @@ Die Spieler müssen einmal auf dem Server gewesen sein, bevor man sie einem Team
 | `/sc zurücksetzen <team>` | OP | Team wieder auf „Regeln noch nicht aktiv“ |
 | `/sc anzeige` | OP | Werkbank-Anzeige sofort auslösen (zum Testen) |
 
-## Werkbank-Anzeige
-
-Alle 30 Minuten wird allen Spielern angezeigt, wo Werkbänke stehen, die **unter Y -30** oder **über Y 95** aufgestellt sind:
-Koordinaten im Chat, ein Glockenton und 60 Sekunden lang ein Lichtstrahl über der Werkbank.
-Das betroffene Team wird eine Minute vorher gewarnt. Werkbänke zwischen Y -30 und Y 95 werden nie angezeigt.
-`/sc status` zeigt, wann die nächste Anzeige kommt.
-
 Als OP zeigt `/sc status` auch, wo die Werkbänke stehen. Normale Spieler sehen das nicht.
+Berechtigung für alle OP-Befehle: `stealcraft.admin`.
 
-## Einstellungen (`plugins/StealCraft/config.yml`)
+## Einstellungen
 
-| Einstellung | Bedeutung |
-|---|---|
-| `ausscheiden` | `BAN` oder `ZUSCHAUER` |
-| `dieb-verraten` | `true` = Name des Diebs steht im Chat |
-| `enderkiste-sperren` | `true` = Werkbänke dürfen nicht in die Enderkiste |
-| `anzeige.intervall-minuten` | Wie oft die Werkbank-Anzeige kommt (Standard 30) |
-| `anzeige.unter-y` / `anzeige.ueber-y` | Höhengrenzen (Standard -30 und 95) |
-| `anzeige.strahl-sekunden` | Dauer des Lichtstrahls (0 = aus) |
-| `anzeige.aktiv` | `false` schaltet die Anzeige ab |
+Datei: `plugins/StealCraft/config.yml`. Nach Änderungen den Server neu starten.
+
+| Einstellung | Standard | Bedeutung |
+|---|---|---|
+| `ausscheiden` | `BAN` | `BAN` oder `ZUSCHAUER` |
+| `dieb-verraten` | `false` | `true` = Name des Diebs steht im Chat |
+| `enderkiste-sperren` | `true` | Werkbänke dürfen nicht in die Enderkiste |
+| `anzeige.aktiv` | `true` | Werkbank-Anzeige an/aus |
+| `anzeige.intervall-minuten` | `30` | Wie oft die Anzeige kommt |
+| `anzeige.unter-y` | `-30` | Angezeigt wird, was tiefer steht |
+| `anzeige.ueber-y` | `95` | … oder höher |
+| `anzeige.strahl-sekunden` | `60` | Dauer des Lichtstrahls (0 = aus) |
 
 Die Spielstände liegen in `plugins/StealCraft/daten.yml`.
+
+## Selbst bauen
+
+Voraussetzung: Java 25 und Gradle.
+
+```
+gradle build
+```
+
+Die fertige Datei liegt danach in `build/libs/`.
+
+## Neue Version veröffentlichen (für Maintainer)
+
+1. Änderungen unter einer neuen Überschrift in [`CHANGELOG.md`](CHANGELOG.md) eintragen, z. B. `## [1.2.0] - 2026-11-01`.
+2. In `build.gradle.kts` die `version` auf dieselbe Nummer setzen.
+3. Committen, dann einen Tag setzen und pushen:
+   ```
+   git tag v1.2.0
+   git push origin v1.2.0
+   ```
+4. GitHub baut das Plugin und legt automatisch ein Release mit der `.jar` und den Patchnotes aus dem Changelog an.
+
+Versionsnummern: **1.x.0** für neue Funktionen, **1.0.x** für Fehlerbehebungen, **2.0.0** wenn sich Regeln oder Befehle grundlegend ändern.
+
+## Lizenz
+
+GNU General Public License v3.0, siehe [LICENSE](LICENSE). Das Plugin nutzt die Paper-API, die ebenfalls unter GPL-3.0 steht.
+
+---
+
+Kein offizielles Minecraft-Produkt. Nicht von Mojang oder Microsoft genehmigt oder mit ihnen verbunden.
+*NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.*

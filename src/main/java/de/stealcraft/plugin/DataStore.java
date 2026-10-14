@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2026 IT-Tedo and StealCraft contributors
 package de.stealcraft.plugin;
 
 import net.kyori.adventure.text.format.NamedTextColor;

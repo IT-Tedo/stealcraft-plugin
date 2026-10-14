@@ -1,0 +1,28 @@
+# Changelog
+
+Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
+Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
+
+## [1.1.0] - 2026-10-14
+
+### Neu
+- Werkbank-Anzeige: Alle 30 Minuten sehen alle Spieler, wo Werkbänke unter Y -30 oder über Y 95 stehen
+  (Koordinaten im Chat, Glockenton, 60 Sekunden Lichtstrahl).
+- Warnung an das betroffene Team eine Minute vor jeder Anzeige.
+- Hinweis beim Aufstellen, wenn die Werkbank in einem angezeigten Höhenbereich steht.
+- Befehl `/sc anzeige` löst die Anzeige sofort aus.
+- `/sc status` zeigt, wann die nächste Anzeige kommt.
+- Neue Einstellungen unter `anzeige:` in der `config.yml`.
+
+## [1.0.0] - 2026-10-13
+
+### Neu
+- Team-Werkbänke mit den StealCraft-Regeln: unendlich Leben, solange die Werkbank steht, sonst ein Leben.
+- Ausscheiden mit Bann (oder Zuschauermodus zum Testen).
+- Werkbank klauen, tauschen und zurückgeben; nur das eigene Team kann sie aufstellen.
+- Schutz der Werkbank vor Lava, Feuer, Explosionen, Kolben, Despawn und Void.
+- Herz-Anzeige in der Tab-Liste.
+- Befehle zum Verwalten von Teams, Werkbänken und Ausgeschiedenen.
+
+[1.1.0]: ../../compare/v1.0.0...v1.1.0
+[1.0.0]: ../../releases/tag/v1.0.0

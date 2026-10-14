@@ -1,11 +1,14 @@
-name: Plugin bauen
+# Checks on every push and pull request that the plugin still compiles.
+name: Build
 
 on:
   push:
+    branches: ['**']
+  pull_request:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -29,15 +32,3 @@ jobs:
         with:
           name: StealCraft-Plugin
           path: build/libs/StealCraft-*.jar
-
-      # Puts the newest .jar on the repository's Releases page ("Neueste Version").
-      - name: Release aktualisieren
-        if: github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release view neueste >/dev/null 2>&1 || \
-            gh release create neueste --title "StealCraft-Plugin (neueste Version)" \
-              --notes "Die .jar-Datei unten herunterladen und in den Ordner plugins des Servers legen." --latest
-          for a in $(gh release view neueste --json assets --jq '.assets[].name'); do gh release delete-asset neueste "$a" -y; done
-          gh release upload neueste build/libs/StealCraft-*.jar --clobber

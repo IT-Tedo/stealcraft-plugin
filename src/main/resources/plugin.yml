@@ -2,7 +2,8 @@ name: StealCraft
 version: '${version}'
 main: de.stealcraft.plugin.StealCraftPlugin
 description: Team-Werkbank-Regeln für das StealCraft-Projekt
-author: StealCraft
+author: IT-Tedo
+website: https://github.com/IT-Tedo/stealcraft-plugin
 api-version: '26.3'
 
 commands:

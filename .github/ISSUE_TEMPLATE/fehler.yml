@@ -1,0 +1,38 @@
+name: Fehler melden
+description: Etwas funktioniert nicht wie beschrieben
+labels: [bug]
+body:
+  - type: textarea
+    id: was
+    attributes:
+      label: Was ist passiert?
+      description: Was hast du gemacht, und was ist dann passiert?
+    validations:
+      required: true
+  - type: textarea
+    id: erwartet
+    attributes:
+      label: Was hättest du erwartet?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Plugin-Version
+      placeholder: z. B. 1.1.0
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: Server-Version
+      description: Steht beim Serverstart in der Konsole
+      placeholder: z. B. Paper 26.3 Build 12
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Fehlermeldung aus der Konsole
+      description: Falls vorhanden. Bitte keine IP-Adressen oder Passwörter mitschicken.
+      render: text
