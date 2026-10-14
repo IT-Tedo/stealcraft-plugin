@@ -1,10 +1,12 @@
-# Pushing a tag like v1.2.0 builds the plugin and publishes a GitHub release
-# with the .jar attached and the matching section of CHANGELOG.md as patch notes.
+# Builds the plugin and publishes a GitHub release with the .jar attached and the
+# matching section of CHANGELOG.md as patch notes. Start it either by pushing a tag
+# like v1.2.0, or in GitHub under Actions -> Release -> "Run workflow" (creates the tag).
 name: Release
 
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -26,13 +28,18 @@ jobs:
 
       - name: Version prüfen
         run: |
-          TAG="${GITHUB_REF_NAME#v}"
           GRADLE=$(grep -E '^version = ' build.gradle.kts | sed -E 's/version = "(.*)"/\1/')
-          if [ "$TAG" != "$GRADLE" ]; then
-            echo "::error::Tag v$TAG passt nicht zur Version $GRADLE in build.gradle.kts"
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            TAG="${GITHUB_REF_NAME#v}"
+            if [ "$TAG" != "$GRADLE" ]; then
+              echo "::error::Tag v$TAG passt nicht zur Version $GRADLE in build.gradle.kts"
+              exit 1
+            fi
+          elif git ls-remote --exit-code --tags origin "refs/tags/v$GRADLE" >/dev/null; then
+            echo "::error::Version $GRADLE wurde schon veröffentlicht. Erst die Version in build.gradle.kts und CHANGELOG.md erhöhen."
             exit 1
           fi
-          echo "VERSION=$TAG" >> "$GITHUB_ENV"
+          echo "VERSION=$GRADLE" >> "$GITHUB_ENV"
 
       - name: Bauen
         run: gradle build --no-daemon
@@ -55,5 +62,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" build/libs/StealCraft-*.jar \
-            --title "StealCraft $VERSION" --notes-file notes.md --latest
+          gh release create "v$VERSION" build/libs/StealCraft-*.jar \
+            --target "$GITHUB_SHA" --title "StealCraft $VERSION" --notes-file notes.md --latest

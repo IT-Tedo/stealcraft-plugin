@@ -104,12 +104,10 @@ Die fertige Datei liegt danach in `build/libs/`.
 
 1. Änderungen unter einer neuen Überschrift in [`CHANGELOG.md`](CHANGELOG.md) eintragen, z. B. `## [1.2.0] - 2026-11-01`.
 2. In `build.gradle.kts` die `version` auf dieselbe Nummer setzen.
-3. Committen, dann einen Tag setzen und pushen:
-   ```
-   git tag v1.2.0
-   git push origin v1.2.0
-   ```
-4. GitHub baut das Plugin und legt automatisch ein Release mit der `.jar` und den Patchnotes aus dem Changelog an.
+3. Committen und pushen.
+4. Auf GitHub unter **Actions → Release → Run workflow** starten
+   (oder alternativ einen Tag `v1.2.0` pushen).
+5. GitHub baut das Plugin und legt automatisch ein Release mit der `.jar` und den Patchnotes aus dem Changelog an.
 
 Versionsnummern: **1.x.0** für neue Funktionen, **1.0.x** für Fehlerbehebungen, **2.0.0** wenn sich Regeln oder Befehle grundlegend ändern.
 
