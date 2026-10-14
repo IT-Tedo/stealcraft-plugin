@@ -80,12 +80,21 @@ public final class Game {
                     title(Component.text("Werkbank steht", NamedTextColor.GREEN),
                             Component.text("Wird sie abgebaut, habt ihr nur noch ein Leben", NamedTextColor.GRAY)),
                     null);
+            warnIfVisible(t, block);
         } else {
+            warnIfVisible(t, block);
             toTeam(t, msg("Eure Werkbank steht wieder. Ihr könnt wieder unendlich oft sterben.", NamedTextColor.GREEN),
                     title(Component.text("Geschützt", NamedTextColor.GREEN),
                             Component.text("Eure Werkbank steht wieder", NamedTextColor.GRAY)),
                     sound("minecraft:block.beacon.power_select", 1.2f));
         }
+    }
+
+    private void warnIfVisible(TeamData t, Location block) {
+        Reveal r = plugin.reveal();
+        if (r == null || r.secondsLeft() < 0 || !r.outOfRange(block)) return;
+        toTeam(t, msg("Achtung: Eure Werkbank steht unter Y " + r.minY() + " oder über Y " + r.maxY()
+                + ". Alle " + r.minutes() + " Minuten sehen alle Spieler, wo sie steht.", NamedTextColor.GOLD), null, null);
     }
 
     public void benchRemoved(TeamData t, Player breaker) {

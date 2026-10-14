@@ -9,6 +9,7 @@ public final class StealCraftPlugin extends JavaPlugin {
     private BenchItem benchItem;
     private TabDisplay tab;
     private Game game;
+    private Reveal reveal;
 
     @Override
     public void onEnable() {
@@ -19,6 +20,8 @@ public final class StealCraftPlugin extends JavaPlugin {
         benchItem = new BenchItem(this);
         tab = new TabDisplay(this);
         game = new Game(this);
+        reveal = new Reveal(this);
+        reveal.start();
 
         getServer().getPluginManager().registerEvents(new BenchListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
@@ -39,8 +42,11 @@ public final class StealCraftPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (reveal != null) reveal.stop();
         if (store != null) store.save();
     }
+
+    public Reveal reveal() { return reveal; }
 
     public DataStore store() { return store; }
     public BenchItem benchItem() { return benchItem; }

@@ -58,6 +58,11 @@ public final class Commands implements TabExecutor {
             case "werkbank" -> giveBench(s, a);
             case "wiederbeleben" -> revive(s, a);
             case "zurücksetzen", "zuruecksetzen" -> reset(s, a);
+            case "anzeige" -> {
+                int n = plugin.reveal().reveal();
+                if (n == 0) info(s, "Gerade steht keine Werkbank unter Y " + plugin.reveal().minY() + " oder über Y " + plugin.reveal().maxY() + ".");
+                else ok(s, n + " Werkbank(en) angezeigt.");
+            }
             default -> help(s);
         }
         return true;
@@ -74,6 +79,7 @@ public final class Commands implements TabExecutor {
         s.sendMessage(Component.text("/sc werkbank <team> [spieler]", NamedTextColor.YELLOW).append(Component.text(" – Werkbank geben (alte wird ungültig)", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc wiederbeleben <spieler>", NamedTextColor.YELLOW).append(Component.text(" – Ausgeschiedenen zurückholen", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc zurücksetzen <team>", NamedTextColor.YELLOW).append(Component.text(" – Regeln für ein Team wieder auf Anfang", NamedTextColor.GRAY)));
+        s.sendMessage(Component.text("/sc anzeige", NamedTextColor.YELLOW).append(Component.text(" – Werkbank-Anzeige sofort auslösen", NamedTextColor.GRAY)));
     }
 
     // ---------- /sc team ----------
@@ -213,6 +219,11 @@ public final class Commands implements TabExecutor {
         if (plugin.store().teams().isEmpty()) { info(s, "Noch keine Teams."); return; }
         boolean admin = s.hasPermission(ADMIN);
         s.sendMessage(Game.tag().append(Component.text("Status", NamedTextColor.WHITE)));
+        long left = plugin.reveal().secondsLeft();
+        if (left >= 0) {
+            s.sendMessage(Component.text("Nächste Werkbank-Anzeige in " + (left / 60) + " Min " + (left % 60) + " Sek"
+                    + " (nur Werkbänke unter Y " + plugin.reveal().minY() + " oder über Y " + plugin.reveal().maxY() + ")", NamedTextColor.GOLD));
+        }
         for (TeamData t : plugin.store().teams()) {
             Component state;
             if (!t.activated()) {
@@ -261,7 +272,7 @@ public final class Commands implements TabExecutor {
         if (a.length == 1) {
             opts.add("status");
             opts.add("hilfe");
-            if (admin) opts.addAll(List.of("team", "werkbank", "wiederbeleben", "zurücksetzen"));
+            if (admin) opts.addAll(List.of("team", "werkbank", "wiederbeleben", "zurücksetzen", "anzeige"));
         } else if (admin && a[0].equalsIgnoreCase("team")) {
             if (a.length == 2) opts.addAll(List.of("erstellen", "hinzufügen", "entfernen", "löschen", "liste"));
             else if (a.length == 3 && !a[1].equalsIgnoreCase("erstellen") && !a[1].equalsIgnoreCase("entfernen")) teamIds(opts);

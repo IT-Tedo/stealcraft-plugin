@@ -39,4 +39,5 @@ jobs:
           gh release view neueste >/dev/null 2>&1 || \
             gh release create neueste --title "StealCraft-Plugin (neueste Version)" \
               --notes "Die .jar-Datei unten herunterladen und in den Ordner plugins des Servers legen." --latest
+          for a in $(gh release view neueste --json assets --jq '.assets[].name'); do gh release delete-asset neueste "$a" -y; done
           gh release upload neueste build/libs/StealCraft-*.jar --clobber

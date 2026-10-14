@@ -14,3 +14,15 @@ dieb-verraten: false
 # Team-Werkbänke dürfen nicht in die Enderkiste,
 # weil man sie dort niemals klauen könnte.
 enderkiste-sperren: true
+
+# Werkbank-Anzeige: Wer seine Werkbank sehr tief oder sehr hoch versteckt,
+# dessen Standort wird regelmäßig allen Spielern angezeigt.
+anzeige:
+  aktiv: true
+  intervall-minuten: 30
+  # Angezeigt werden Werkbänke UNTER dieser Höhe ...
+  unter-y: -30
+  # ... oder ÜBER dieser Höhe.
+  ueber-y: 95
+  # Wie lange ein Lichtstrahl über der Werkbank zu sehen ist (0 = kein Strahl).
+  strahl-sekunden: 60

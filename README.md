@@ -68,6 +68,14 @@ Die Spieler müssen einmal auf dem Server gewesen sein, bevor man sie einem Team
 | `/sc werkbank <team> [spieler]` | OP | Werkbank geben. Ältere Werkbänke des Teams werden ungültig. |
 | `/sc wiederbeleben <spieler>` | OP | Ausgeschiedenen Spieler zurückholen und entbannen |
 | `/sc zurücksetzen <team>` | OP | Team wieder auf „Regeln noch nicht aktiv“ |
+| `/sc anzeige` | OP | Werkbank-Anzeige sofort auslösen (zum Testen) |
+
+## Werkbank-Anzeige
+
+Alle 30 Minuten wird allen Spielern angezeigt, wo Werkbänke stehen, die **unter Y -30** oder **über Y 95** aufgestellt sind:
+Koordinaten im Chat, ein Glockenton und 60 Sekunden lang ein Lichtstrahl über der Werkbank.
+Das betroffene Team wird eine Minute vorher gewarnt. Werkbänke zwischen Y -30 und Y 95 werden nie angezeigt.
+`/sc status` zeigt, wann die nächste Anzeige kommt.
 
 Als OP zeigt `/sc status` auch, wo die Werkbänke stehen. Normale Spieler sehen das nicht.
 
@@ -78,5 +86,9 @@ Als OP zeigt `/sc status` auch, wo die Werkbänke stehen. Normale Spieler sehen 
 | `ausscheiden` | `BAN` oder `ZUSCHAUER` |
 | `dieb-verraten` | `true` = Name des Diebs steht im Chat |
 | `enderkiste-sperren` | `true` = Werkbänke dürfen nicht in die Enderkiste |
+| `anzeige.intervall-minuten` | Wie oft die Werkbank-Anzeige kommt (Standard 30) |
+| `anzeige.unter-y` / `anzeige.ueber-y` | Höhengrenzen (Standard -30 und 95) |
+| `anzeige.strahl-sekunden` | Dauer des Lichtstrahls (0 = aus) |
+| `anzeige.aktiv` | `false` schaltet die Anzeige ab |
 
 Die Spielstände liegen in `plugins/StealCraft/daten.yml`.
