@@ -8,6 +8,8 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Ve
 ### Neu
 - Befehle `/sc nether sperren|öffnen` und `/sc end sperren|öffnen` sperren das Nether bzw. das End für alle Spieler.
   Der Zustand bleibt nach einem Neustart erhalten. `/sc status` zeigt den aktuellen Stand.
+- Werkbank außerhalb der Weltbegrenzung: Das Aufstellen ist nicht erlaubt. Wer es versucht, disqualifiziert das ganze Team.
+  Alle Mitglieder scheiden aus und werden gebannt (oder werden Zuschauer, wenn `ausscheiden: ZUSCHAUER` gesetzt ist).
 
 ## [1.2.0] - 2026-10-15
 

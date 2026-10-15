@@ -160,6 +160,36 @@ public final class Game {
         return true;
     }
 
+    /**
+     * The whole team is out. Used when a member places the bench outside the world border.
+     * Every member counts as eliminated. Online members get banned (or become spectators), offline members
+     * are stopped at their next login by the pre-login check.
+     */
+    public void disqualify(TeamData t, Player offender) {
+        for (UUID uuid : t.members()) plugin.store().eliminate(uuid);
+        plugin.store().save();
+        plugin.tab().refresh();
+
+        toAll(tag().append(teamName(t)).append(Component.text(" ist disqualifiziert! ", NamedTextColor.DARK_RED))
+                        .append(Component.text(offender.getName(), NamedTextColor.WHITE))
+                        .append(Component.text(" hat die Werkbank außerhalb der Weltbegrenzung aufgestellt.", NamedTextColor.RED)),
+                title(Component.text("Team " + t.id() + " disqualifiziert", NamedTextColor.DARK_RED),
+                        Component.text("Werkbank außerhalb der Weltbegrenzung", NamedTextColor.GRAY)),
+                sound("minecraft:entity.wither.death", 0.8f));
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for (UUID uuid : t.members()) {
+                Player p = Bukkit.getPlayer(uuid);
+                if (p == null) continue;
+                if (plugin.banOnElimination()) {
+                    p.ban("Dein Team wurde bei StealCraft disqualifiziert (Werkbank außerhalb der Weltbegrenzung).", (Date) null, "StealCraft", true);
+                } else {
+                    p.setGameMode(GameMode.SPECTATOR);
+                }
+            }
+        }, 60L);
+    }
+
     /** In spectator mode, eliminated players become spectators when they respawn or join. */
     public void applySpectator(Player p) {
         if (!plugin.banOnElimination() && plugin.store().isEliminated(p.getUniqueId())) {

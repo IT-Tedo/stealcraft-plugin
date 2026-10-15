@@ -80,6 +80,11 @@ public final class BenchListener implements Listener {
             return;
         }
         Location spot = e.getBlockPlaced().getLocation();
+        if (!spot.getWorld().getWorldBorder().isInside(spot.clone().add(0.5, 0, 0.5))) {
+            e.setCancelled(true);
+            plugin.game().disqualify(t, p);
+            return;
+        }
         if (!plugin.store().bedInRange(t, spot)) {
             e.setCancelled(true);
             Location anchor = plugin.store().anchorBed(t);
