@@ -84,6 +84,7 @@ Datei: `plugins/StealCraft/config.yml`. Nach Änderungen den Server neu starten.
 | `ausscheiden` | `BAN` | `BAN` oder `ZUSCHAUER` |
 | `dieb-verraten` | `false` | `true` = Name des Diebs steht im Chat |
 | `enderkiste-sperren` | `true` | Werkbänke dürfen nicht in die Enderkiste |
+| `bett-abstand` | `50` | Größter Abstand zwischen Werkbank und einem Bett des Teams |
 | `anzeige.aktiv` | `true` | Werkbank-Anzeige an/aus |
 | `anzeige.intervall-minuten` | `30` | Wie oft die Anzeige kommt |
 | `anzeige.unter-y` | `-30` | Angezeigt wird, was tiefer steht |
