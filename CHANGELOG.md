@@ -3,6 +3,11 @@
 Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## [Unveröffentlicht]
+
+### Neu
+- Siegbedingung: Ist nur noch ein Team mit lebenden Spielern übrig, wird es als Sieger angekündigt.
+
 ## [1.3.0] - 2026-10-15
 
 ### Neu

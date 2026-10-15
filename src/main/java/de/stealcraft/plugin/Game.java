@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /** The StealCraft rules: what happens when a bench is placed, removed, or a player dies. */
@@ -145,6 +146,7 @@ public final class Game {
             Bukkit.getScheduler().runTaskLater(plugin, () ->
                     toAll(tag().append(teamName(t)).append(Component.text(" ist komplett ausgeschieden.", NamedTextColor.DARK_RED)),
                             null, sound("minecraft:ui.toast.challenge_complete", 0.6f)), 80L);
+            checkWinner();
         }
 
         UUID uuid = player.getUniqueId();
@@ -188,6 +190,26 @@ public final class Game {
                 }
             }
         }, 60L);
+    }
+
+    /**
+     * Last team standing wins. Teams whose members are all out do not count. If exactly one team still has
+     * a player in the game, that team is announced as the winner. Shown a moment after the "komplett ausgeschieden"
+     * message so both are readable.
+     */
+    private void checkWinner() {
+        List<TeamData> alive = plugin.store().teams().stream()
+                .filter(team -> !team.members().isEmpty())
+                .filter(team -> team.members().stream().anyMatch(u -> !plugin.store().isEliminated(u)))
+                .toList();
+        if (alive.size() != 1) return;
+
+        TeamData winner = alive.get(0);
+        Bukkit.getScheduler().runTaskLater(plugin, () ->
+                toAll(tag().append(teamName(winner)).append(Component.text(" hat gewonnen!", NamedTextColor.GOLD)),
+                        title(Component.text("Team " + winner.id() + " gewinnt!", NamedTextColor.GOLD),
+                                Component.text("Alle anderen Teams sind ausgeschieden", NamedTextColor.GRAY)),
+                        sound("minecraft:ui.toast.challenge_complete", 1f)), 100L);
     }
 
     /** In spectator mode, eliminated players become spectators when they respawn or join. */
