@@ -138,23 +138,30 @@ public final class DataStore {
         return Math.max(0, plugin.getConfig().getDouble("bett-abstand", 50));
     }
 
-    /**
-     * True if one of the team's beds is within bedRange() of the spot. Beds that no longer exist
-     * (broken, exploded) are removed on the way, so a broken bed does not count any more.
-     */
-    public boolean bedInRange(TeamData team, Location spot) {
-        boolean found = false;
+    /** Removes beds that no longer exist (broken, exploded), keeping the order of the rest. */
+    public void pruneBeds(TeamData team) {
         Iterator<Location> it = team.beds().iterator();
         while (it.hasNext()) {
             Location bed = it.next();
             if (bed.getWorld() == null) { it.remove(); continue; }
-            if (bed.isChunkLoaded() && !Tag.BEDS.isTagged(bed.getBlock().getType())) {
-                it.remove();
-                continue;
-            }
-            if (bed.getWorld().equals(spot.getWorld()) && bed.distance(spot) <= bedRange()) found = true;
+            if (bed.isChunkLoaded() && !Tag.BEDS.isTagged(bed.getBlock().getType())) it.remove();
         }
-        return found;
+    }
+
+    /**
+     * The team's Stammbett: the first bed it placed that still exists. The bench is bound to it.
+     * If it is broken, the next bed placed by a team member takes its place.
+     */
+    public Location anchorBed(TeamData team) {
+        pruneBeds(team);
+        return team.beds().isEmpty() ? null : team.beds().get(0);
+    }
+
+    /** True if the spot is within bedRange() of the team's Stammbett. */
+    public boolean bedInRange(TeamData team, Location spot) {
+        Location anchor = anchorBed(team);
+        if (anchor == null || anchor.getWorld() == null || !anchor.getWorld().equals(spot.getWorld())) return false;
+        return anchor.distance(spot) <= bedRange();
     }
 
     public boolean isEliminated(UUID uuid) { return eliminated.contains(uuid); }

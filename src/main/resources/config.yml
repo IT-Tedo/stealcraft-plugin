@@ -15,9 +15,9 @@ dieb-verraten: false
 # weil man sie dort niemals klauen könnte.
 enderkiste-sperren: true
 
-# Die Werkbank darf nur im Umkreis von so vielen Blöcken von einem Bett
-# des eigenen Teams aufgestellt werden. Betten registrieren Teammitglieder,
-# indem sie ein Bett platzieren.
+# Die Werkbank darf nur im Umkreis von so vielen Blöcken vom Stammbett
+# des Teams aufgestellt werden. Das Stammbett ist das erste Bett, das ein
+# Teammitglied aufstellt. Geht es kaputt, wird das nächste Bett das Stammbett.
 bett-abstand: 50
 
 # Werkbank-Anzeige: Wer seine Werkbank sehr tief oder sehr hoch versteckt,

@@ -82,25 +82,31 @@ public final class BenchListener implements Listener {
         Location spot = e.getBlockPlaced().getLocation();
         if (!plugin.store().bedInRange(t, spot)) {
             e.setCancelled(true);
+            Location anchor = plugin.store().anchorBed(t);
             int range = (int) Math.round(plugin.store().bedRange());
-            String text = t.beds().isEmpty()
-                    ? "Euer Team hat noch kein Bett. Stellt zuerst ein Bett auf, dann darf die Werkbank in dessen Nähe."
-                    : "Die Werkbank muss im Umkreis von " + range + " Blöcken von einem Bett eures Teams stehen.";
+            String text = anchor == null
+                    ? "Euer Team hat noch kein Bett. Das erste Bett, das ihr aufstellt, wird das Stammbett der Werkbank."
+                    : "Die Werkbank muss im Umkreis von " + range + " Blöcken vom Stammbett stehen (Bett bei "
+                      + anchor.getBlockX() + " " + anchor.getBlockY() + " " + anchor.getBlockZ() + ").";
             p.sendMessage(Game.msg(text, NamedTextColor.RED));
             return;
         }
         plugin.game().benchPlaced(t, p, spot);
     }
 
-    /** A bed placed by a team member counts as one of the team's beds. */
+    /**
+     * A bed placed by a team member becomes the team's Stammbett, but only if there is none yet.
+     * Any further beds are ordinary beds and do not change where the bench may stand.
+     */
     private void registerBed(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         TeamData t = plugin.store().teamOf(p.getUniqueId());
-        if (t == null) return;
+        if (t == null || plugin.store().anchorBed(t) != null) return;
         t.beds().add(e.getBlockPlaced().getLocation());
         plugin.store().save();
-        p.sendMessage(Game.msg("Bett für Team " + t.id() + " registriert. Die Werkbank darf jetzt im Umkreis von "
-                + (int) Math.round(plugin.store().bedRange()) + " Blöcken davon aufgestellt werden.", NamedTextColor.GREEN));
+        p.sendMessage(Game.msg("Dieses Bett ist jetzt das Stammbett von Team " + t.id()
+                + ". Die Werkbank darf im Umkreis von " + (int) Math.round(plugin.store().bedRange())
+                + " Blöcken davon stehen.", NamedTextColor.GREEN));
     }
 
     // ---------- breaking ----------

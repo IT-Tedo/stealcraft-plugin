@@ -18,8 +18,10 @@ Wird sie geklaut, hat jeder nur noch ein Leben.
 - Jeder darf jede Werkbank abbauen. Sie wird dann zu einem Item, das man behalten,
   verstecken, tauschen oder zurückgeben kann.
 - Nur das eigene Team kann seine Werkbank wieder aufstellen.
-- Die Werkbank darf nur im Umkreis von **50 Blöcken** von einem **Bett des eigenen Teams** stehen.
-  Betten registriert, wer als Teammitglied ein Bett platziert. Ein abgebautes Bett zählt nicht mehr.
+- Jedes Team hat **nur eine Werkbank**.
+- Die Werkbank ist an das **Stammbett** des Teams gebunden. Das ist das **erste Bett**, das ein Teammitglied aufstellt.
+  Die Werkbank darf nur im Umkreis von **50 Blöcken** davon stehen. Weitere Betten ändern daran nichts.
+  Geht das Stammbett kaputt, wird das nächste Bett, das ein Teammitglied aufstellt, zum Stammbett.
 - Stirbt jemand mit einer Werkbank im Inventar, wird sie ganz normal gedroppt.
 
 Damit die Werkbank nie verloren geht:
@@ -84,7 +86,7 @@ Datei: `plugins/StealCraft/config.yml`. Nach Änderungen den Server neu starten.
 | `ausscheiden` | `BAN` | `BAN` oder `ZUSCHAUER` |
 | `dieb-verraten` | `false` | `true` = Name des Diebs steht im Chat |
 | `enderkiste-sperren` | `true` | Werkbänke dürfen nicht in die Enderkiste |
-| `bett-abstand` | `50` | Größter Abstand zwischen Werkbank und einem Bett des Teams |
+| `bett-abstand` | `50` | Größter Abstand zwischen Werkbank und dem Stammbett des Teams |
 | `anzeige.aktiv` | `true` | Werkbank-Anzeige an/aus |
 | `anzeige.intervall-minuten` | `30` | Wie oft die Anzeige kommt |
 | `anzeige.unter-y` | `-30` | Angezeigt wird, was tiefer steht |

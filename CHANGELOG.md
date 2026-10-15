@@ -6,8 +6,9 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Ve
 ## [1.2.0] - 2026-10-15
 
 ### Neu
-- Die Werkbank darf nur im Umkreis von 50 Blöcken von einem Bett des eigenen Teams aufgestellt werden.
-  Betten registriert, wer als Teammitglied ein Bett platziert. Der Abstand steht in der `config.yml` (`bett-abstand`).
+- Die Werkbank ist an das Stammbett des Teams gebunden, das erste Bett, das ein Teammitglied aufstellt.
+  Sie darf nur im Umkreis von 50 Blöcken davon stehen. Der Abstand steht in der `config.yml` (`bett-abstand`).
+- Pro Team gibt es nur eine Werkbank.
 
 ## [1.1.0] - 2026-10-14
 
