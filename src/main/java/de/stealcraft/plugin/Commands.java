@@ -60,6 +60,8 @@ public final class Commands implements TabExecutor {
             case "werkbank" -> giveBench(s, a);
             case "wiederbeleben" -> revive(s, a);
             case "zurücksetzen", "zuruecksetzen" -> reset(s, a);
+            case "nether" -> dimension(s, org.bukkit.World.Environment.NETHER, a);
+            case "end" -> dimension(s, org.bukkit.World.Environment.THE_END, a);
             case "anzeige" -> {
                 int n = plugin.reveal().reveal();
                 if (n == 0) info(s, "Gerade steht keine Werkbank unter Y " + plugin.reveal().minY() + " oder über Y " + plugin.reveal().maxY() + ".");
@@ -82,6 +84,8 @@ public final class Commands implements TabExecutor {
         s.sendMessage(Component.text("/sc wiederbeleben <spieler>", NamedTextColor.YELLOW).append(Component.text(" – Ausgeschiedenen zurückholen", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc zurücksetzen <team>", NamedTextColor.YELLOW).append(Component.text(" – Regeln für ein Team wieder auf Anfang", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc anzeige", NamedTextColor.YELLOW).append(Component.text(" – Werkbank-Anzeige sofort auslösen", NamedTextColor.GRAY)));
+        s.sendMessage(Component.text("/sc nether sperren|öffnen", NamedTextColor.YELLOW).append(Component.text(" – Nether sperren oder öffnen", NamedTextColor.GRAY)));
+        s.sendMessage(Component.text("/sc end sperren|öffnen", NamedTextColor.YELLOW).append(Component.text(" – End sperren oder öffnen", NamedTextColor.GRAY)));
     }
 
     // ---------- /sc team ----------
@@ -215,12 +219,36 @@ public final class Commands implements TabExecutor {
         ok(s, "Team " + t.id() + " ist zurückgesetzt. Bis die Werkbank wieder steht, gelten normale Regeln.");
     }
 
+    // ---------- /sc nether | /sc end ----------
+
+    private void dimension(CommandSender s, org.bukkit.World.Environment env, String[] a) {
+        boolean nether = env == org.bukkit.World.Environment.NETHER;
+        String name = nether ? "Nether" : "End";
+        String cmd = nether ? "nether" : "end";
+        if (a.length < 2) { err(s, "/sc " + cmd + " sperren|öffnen"); return; }
+        boolean lock;
+        switch (a[1].toLowerCase()) {
+            case "sperren" -> lock = true;
+            case "öffnen", "oeffnen" -> lock = false;
+            default -> { err(s, "/sc " + cmd + " sperren|öffnen"); return; }
+        }
+        plugin.store().setLocked(env, lock);
+        String text = lock ? "Das " + name + " ist jetzt gesperrt. Niemand kann mehr hinein."
+                           : "Das " + name + " ist jetzt offen.";
+        ok(s, text);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p != s) p.sendMessage(Game.msg(text, lock ? NamedTextColor.RED : NamedTextColor.GREEN));
+        }
+    }
+
     // ---------- /sc status ----------
 
     private void status(CommandSender s) {
         if (plugin.store().teams().isEmpty()) { info(s, "Noch keine Teams."); return; }
         boolean admin = s.hasPermission(ADMIN);
         s.sendMessage(Game.tag().append(Component.text("Status", NamedTextColor.WHITE)));
+        s.sendMessage(Component.text("Nether: " + (plugin.store().isLocked(org.bukkit.World.Environment.NETHER) ? "gesperrt" : "offen")
+                + " · End: " + (plugin.store().isLocked(org.bukkit.World.Environment.THE_END) ? "gesperrt" : "offen"), NamedTextColor.GRAY));
         long left = plugin.reveal().secondsLeft();
         if (left >= 0) {
             s.sendMessage(Component.text("Nächste Werkbank-Anzeige in " + (left / 60) + " Min " + (left % 60) + " Sek"
@@ -274,7 +302,7 @@ public final class Commands implements TabExecutor {
         if (a.length == 1) {
             opts.add("status");
             opts.add("hilfe");
-            if (admin) opts.addAll(List.of("team", "werkbank", "wiederbeleben", "zurücksetzen", "anzeige"));
+            if (admin) opts.addAll(List.of("team", "werkbank", "wiederbeleben", "zurücksetzen", "anzeige", "nether", "end"));
         } else if (admin && a[0].equalsIgnoreCase("team")) {
             if (a.length == 2) opts.addAll(List.of("erstellen", "hinzufügen", "entfernen", "löschen", "liste"));
             else if (a.length == 3 && !a[1].equalsIgnoreCase("erstellen") && !a[1].equalsIgnoreCase("entfernen")) teamIds(opts);
@@ -284,6 +312,8 @@ public final class Commands implements TabExecutor {
         } else if (admin && (a[0].equalsIgnoreCase("werkbank") || a[0].toLowerCase().startsWith("zur"))) {
             if (a.length == 2) teamIds(opts);
             else if (a.length == 3 && a[0].equalsIgnoreCase("werkbank")) onlineNames(opts);
+        } else if (admin && (a[0].equalsIgnoreCase("nether") || a[0].equalsIgnoreCase("end")) && a.length == 2) {
+            opts.addAll(List.of("sperren", "öffnen"));
         } else if (admin && a[0].equalsIgnoreCase("wiederbeleben") && a.length == 2) {
             onlineNames(opts);
         }

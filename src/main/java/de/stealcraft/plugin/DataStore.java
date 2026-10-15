@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public final class DataStore {
     private final File file;
     private final Map<String, TeamData> teams = new LinkedHashMap<>();
     private final Set<UUID> eliminated = ConcurrentHashMap.newKeySet();
+    private final Set<World.Environment> gesperrt = EnumSet.noneOf(World.Environment.class);
 
     public DataStore(StealCraftPlugin plugin) {
         this.plugin = plugin;
@@ -36,6 +38,7 @@ public final class DataStore {
     public void load() {
         teams.clear();
         eliminated.clear();
+        gesperrt.clear();
         if (!file.exists()) return;
 
         YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
@@ -75,6 +78,9 @@ public final class DataStore {
         for (String s : yml.getStringList("ausgeschieden")) {
             try { eliminated.add(UUID.fromString(s)); } catch (IllegalArgumentException ignored) { }
         }
+        for (String s : yml.getStringList("gesperrt")) {
+            try { gesperrt.add(World.Environment.valueOf(s)); } catch (IllegalArgumentException ignored) { }
+        }
     }
 
     public void save() {
@@ -99,6 +105,7 @@ public final class DataStore {
             }
         }
         yml.set("ausgeschieden", eliminated.stream().map(UUID::toString).toList());
+        yml.set("gesperrt", gesperrt.stream().map(Enum::name).toList());
         try {
             plugin.getDataFolder().mkdirs();
             yml.save(file);
@@ -162,6 +169,14 @@ public final class DataStore {
         Location anchor = anchorBed(team);
         if (anchor == null || anchor.getWorld() == null || !anchor.getWorld().equals(spot.getWorld())) return false;
         return anchor.distance(spot) <= bedRange();
+    }
+
+    /** Nether and End can be locked by an operator. Locked means nobody can enter that dimension. */
+    public boolean isLocked(World.Environment env) { return gesperrt.contains(env); }
+
+    public void setLocked(World.Environment env, boolean locked) {
+        if (locked) gesperrt.add(env); else gesperrt.remove(env);
+        save();
     }
 
     public boolean isEliminated(UUID uuid) { return eliminated.contains(uuid); }

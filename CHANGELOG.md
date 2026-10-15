@@ -3,6 +3,12 @@
 Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## [Unveröffentlicht]
+
+### Neu
+- Befehle `/sc nether sperren|öffnen` und `/sc end sperren|öffnen` sperren das Nether bzw. das End für alle Spieler.
+  Der Zustand bleibt nach einem Neustart erhalten. `/sc status` zeigt den aktuellen Stand.
+
 ## [1.2.0] - 2026-10-15
 
 ### Neu

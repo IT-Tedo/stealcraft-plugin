@@ -73,6 +73,8 @@ Die Spieler müssen einmal auf dem Server gewesen sein, bevor man sie einem Team
 | `/sc wiederbeleben <spieler>` | OP | Ausgeschiedenen Spieler zurückholen und entbannen |
 | `/sc zurücksetzen <team>` | OP | Team wieder auf „Regeln noch nicht aktiv“ |
 | `/sc anzeige` | OP | Werkbank-Anzeige sofort auslösen (zum Testen) |
+| `/sc nether sperren` / `öffnen` | OP | Nether sperren oder wieder öffnen. Wer hineingehen will, wird abgewiesen. Rausgehen bleibt möglich. |
+| `/sc end sperren` / `öffnen` | OP | End sperren oder wieder öffnen (gleiche Regeln wie das Nether) |
 
 Als OP zeigt `/sc status` auch, wo die Werkbänke stehen. Normale Spieler sehen das nicht.
 Berechtigung für alle OP-Befehle: `stealcraft.admin`.

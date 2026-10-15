@@ -27,6 +27,7 @@ public final class StealCraftPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new BenchListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new DimensionListener(this), this);
 
         Commands commands = new Commands(this);
         PluginCommand cmd = getCommand("stealcraft");
