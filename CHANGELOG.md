@@ -3,6 +3,12 @@
 Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.2.0] - 2026-10-15
+
+### Neu
+- Die Werkbank darf nur im Umkreis von 50 Blöcken von einem Bett des eigenen Teams aufgestellt werden.
+  Betten registriert, wer als Teammitglied ein Bett platziert. Der Abstand steht in der `config.yml` (`bett-abstand`).
+
 ## [1.1.0] - 2026-10-14
 
 ### Neu
@@ -24,5 +30,6 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Ve
 - Herz-Anzeige in der Tab-Liste.
 - Befehle zum Verwalten von Teams, Werkbänken und Ausgeschiedenen.
 
+[1.2.0]: ../../compare/v1.1.0...v1.2.0
 [1.1.0]: ../../compare/v1.0.0...v1.1.0
 [1.0.0]: ../../releases/tag/v1.0.0

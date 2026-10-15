@@ -4,6 +4,7 @@ package de.stealcraft.plugin;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -47,6 +48,10 @@ public final class BenchListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent e) {
+        if (Tag.BEDS.isTagged(e.getBlockPlaced().getType())) {
+            registerBed(e);
+            return;
+        }
         ItemStack hand = e.getItemInHand();
         String id = items.teamOf(hand);
         if (id == null) return;
@@ -74,7 +79,28 @@ public final class BenchListener implements Listener {
             p.sendMessage(Game.msg("Eure Werkbank steht schon.", NamedTextColor.YELLOW));
             return;
         }
-        plugin.game().benchPlaced(t, p, e.getBlockPlaced().getLocation());
+        Location spot = e.getBlockPlaced().getLocation();
+        if (!plugin.store().bedInRange(t, spot)) {
+            e.setCancelled(true);
+            int range = (int) Math.round(plugin.store().bedRange());
+            String text = t.beds().isEmpty()
+                    ? "Euer Team hat noch kein Bett. Stellt zuerst ein Bett auf, dann darf die Werkbank in dessen Nähe."
+                    : "Die Werkbank muss im Umkreis von " + range + " Blöcken von einem Bett eures Teams stehen.";
+            p.sendMessage(Game.msg(text, NamedTextColor.RED));
+            return;
+        }
+        plugin.game().benchPlaced(t, p, spot);
+    }
+
+    /** A bed placed by a team member counts as one of the team's beds. */
+    private void registerBed(BlockPlaceEvent e) {
+        Player p = e.getPlayer();
+        TeamData t = plugin.store().teamOf(p.getUniqueId());
+        if (t == null) return;
+        t.beds().add(e.getBlockPlaced().getLocation());
+        plugin.store().save();
+        p.sendMessage(Game.msg("Bett für Team " + t.id() + " registriert. Die Werkbank darf jetzt im Umkreis von "
+                + (int) Math.round(plugin.store().bedRange()) + " Blöcken davon aufgestellt werden.", NamedTextColor.GREEN));
     }
 
     // ---------- breaking ----------

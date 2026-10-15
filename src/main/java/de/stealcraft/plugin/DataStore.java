@@ -5,6 +5,7 @@ package de.stealcraft.plugin;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +59,15 @@ public final class DataStore {
                         team.location(new Location(w, t.getInt("ort.x"), t.getInt("ort.y"), t.getInt("ort.z")));
                     }
                 }
+                for (String b : t.getStringList("betten")) {
+                    String[] parts = b.split(";");
+                    if (parts.length != 4) continue;
+                    World bw = Bukkit.getWorld(parts[0]);
+                    if (bw == null) continue;
+                    try {
+                        team.beds().add(new Location(bw, Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3])));
+                    } catch (NumberFormatException ignored) { }
+                }
                 if (team.placed() && team.location() == null) team.placed(false);
                 teams.put(id, team);
             }
@@ -75,6 +86,10 @@ public final class DataStore {
             yml.set(p + "aktiv", team.activated());
             yml.set(p + "platziert", team.placed());
             yml.set(p + "werkbank-version", team.benchVersion());
+            yml.set(p + "betten", team.beds().stream()
+                    .filter(b -> b.getWorld() != null)
+                    .map(b -> b.getWorld().getName() + ";" + b.getBlockX() + ";" + b.getBlockY() + ";" + b.getBlockZ())
+                    .toList());
             Location l = team.location();
             if (l != null && l.getWorld() != null) {
                 yml.set(p + "ort.welt", l.getWorld().getName());
@@ -116,6 +131,30 @@ public final class DataStore {
             }
         }
         return null;
+    }
+
+    /** Largest distance in blocks between a team bench and one of the team's beds. */
+    public double bedRange() {
+        return Math.max(0, plugin.getConfig().getDouble("bett-abstand", 50));
+    }
+
+    /**
+     * True if one of the team's beds is within bedRange() of the spot. Beds that no longer exist
+     * (broken, exploded) are removed on the way, so a broken bed does not count any more.
+     */
+    public boolean bedInRange(TeamData team, Location spot) {
+        boolean found = false;
+        Iterator<Location> it = team.beds().iterator();
+        while (it.hasNext()) {
+            Location bed = it.next();
+            if (bed.getWorld() == null) { it.remove(); continue; }
+            if (bed.isChunkLoaded() && !Tag.BEDS.isTagged(bed.getBlock().getType())) {
+                it.remove();
+                continue;
+            }
+            if (bed.getWorld().equals(spot.getWorld()) && bed.distance(spot) <= bedRange()) found = true;
+        }
+        return found;
     }
 
     public boolean isEliminated(UUID uuid) { return eliminated.contains(uuid); }

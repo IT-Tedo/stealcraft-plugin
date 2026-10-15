@@ -18,6 +18,8 @@ Wird sie geklaut, hat jeder nur noch ein Leben.
 - Jeder darf jede Werkbank abbauen. Sie wird dann zu einem Item, das man behalten,
   verstecken, tauschen oder zurückgeben kann.
 - Nur das eigene Team kann seine Werkbank wieder aufstellen.
+- Die Werkbank darf nur im Umkreis von **50 Blöcken** von einem **Bett des eigenen Teams** stehen.
+  Betten registriert, wer als Teammitglied ein Bett platziert. Ein abgebautes Bett zählt nicht mehr.
 - Stirbt jemand mit einer Werkbank im Inventar, wird sie ganz normal gedroppt.
 
 Damit die Werkbank nie verloren geht:

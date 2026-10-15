@@ -5,7 +5,9 @@ package de.stealcraft.plugin;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,6 +25,8 @@ public final class TeamData {
     private Location location;
     /** Raised when an admin hands out a replacement bench; older bench items stop working. */
     private int benchVersion = 1;
+    /** Beds placed by team members. The team bench may only be placed near one of them. */
+    private final List<Location> beds = new ArrayList<>();
 
     public TeamData(String id, NamedTextColor color) {
         this.id = id;
@@ -43,6 +47,7 @@ public final class TeamData {
     public void location(Location location) { this.location = location; }
     public int benchVersion() { return benchVersion; }
     public void benchVersion(int benchVersion) { this.benchVersion = benchVersion; }
+    public List<Location> beds() { return beds; }
 
     /** Deaths are only final once the rules are active and the bench is not standing. */
     public boolean vulnerable() {
