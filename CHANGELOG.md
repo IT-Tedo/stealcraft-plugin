@@ -3,7 +3,7 @@
 Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
 
-## [Unveröffentlicht]
+## [1.3.2] - 2026-10-16
 
 ### Geändert
 - Stammbett wieder aufgestellt: Ist das Stammbett abgebaut und ein Teammitglied stellt ein neues Bett auf, wird
@@ -51,6 +51,7 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Ve
 - Herz-Anzeige in der Tab-Liste.
 - Befehle zum Verwalten von Teams, Werkbänken und Ausgeschiedenen.
 
+[1.3.2]: ../../compare/v1.3.1...v1.3.2
 [1.3.1]: ../../compare/v1.3.0...v1.3.1
 [1.3.0]: ../../compare/v1.2.0...v1.3.0
 [1.2.0]: ../../compare/v1.1.0...v1.2.0
