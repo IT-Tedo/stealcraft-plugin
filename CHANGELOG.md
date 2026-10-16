@@ -3,6 +3,13 @@
 Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## [Unveröffentlicht]
+
+### Geändert
+- Stammbett wieder aufgestellt: Ist das Stammbett abgebaut und ein Teammitglied stellt ein neues Bett auf, wird
+  dieses das Stammbett. Stand die Werkbank in dem Moment nicht, bekommt das Team am neuen Bett eine neue Werkbank.
+  Die alten Werkbänke werden ungültig.
+
 ## [1.3.1] - 2026-10-15
 
 ### Neu

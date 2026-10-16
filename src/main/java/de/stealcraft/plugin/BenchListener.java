@@ -107,11 +107,14 @@ public final class BenchListener implements Listener {
         Player p = e.getPlayer();
         TeamData t = plugin.store().teamOf(p.getUniqueId());
         if (t == null || plugin.store().anchorBed(t) != null) return;
-        t.beds().add(e.getBlockPlaced().getLocation());
+        Location bed = e.getBlockPlaced().getLocation();
+        t.beds().add(bed);
         plugin.store().save();
         p.sendMessage(Game.msg("Dieses Bett ist jetzt das Stammbett von Team " + t.id()
                 + ". Die Werkbank darf im Umkreis von " + (int) Math.round(plugin.store().bedRange())
                 + " Blöcken davon stehen.", NamedTextColor.GREEN));
+        // The bench was placed before, but is not standing now (its Stammbett was lost). It comes back at this bed.
+        if (t.activated() && !t.placed()) plugin.game().respawnBench(t, bed);
     }
 
     // ---------- breaking ----------

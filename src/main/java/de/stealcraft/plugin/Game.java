@@ -193,6 +193,20 @@ public final class Game {
     }
 
     /**
+     * The team's Stammbett was broken and a new bed is placed. The bench was not standing, so the team gets a fresh
+     * one right at the new bed. All older benches of the team become invalid, as with /sc werkbank.
+     */
+    public void respawnBench(TeamData t, Location bed) {
+        t.benchVersion(t.benchVersion() + 1);
+        plugin.store().save();
+        bed.getWorld().dropItem(bed.toBlockLocation().add(0.5, 1.0, 0.5), plugin.benchItem().create(t));
+        toTeam(t, msg("Euer Stammbett steht wieder. Die Werkbank liegt jetzt am Bett. Alte Werkbänke sind ungültig.", NamedTextColor.GREEN),
+                title(Component.text("Werkbank am Bett", NamedTextColor.GREEN),
+                        Component.text("Holt sie ab, bevor sie jemand klaut", NamedTextColor.GRAY)),
+                sound("minecraft:block.beacon.power_select", 1.2f));
+    }
+
+    /**
      * Last team standing wins. Teams whose members are all out do not count. If exactly one team still has
      * a player in the game, that team is announced as the winner. Shown a moment after the "komplett ausgeschieden"
      * message so both are readable.
