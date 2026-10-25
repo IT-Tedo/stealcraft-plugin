@@ -134,14 +134,47 @@ public final class BenchListener implements Listener {
 
     // The bench can only be removed by a player mining it.
 
+    /**
+     * The Stammbett can only go once the bench is gone. Then it is forgotten at once, so the next bed placed by the
+     * team becomes the new Stammbett, wherever it stands.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBedBreak(BlockBreakEvent e) {
+        Block b = e.getBlock();
+        if (!Tag.BEDS.isTagged(b.getType())) return;
+        TeamData owner = plugin.store().bedOwner(b.getLocation());
+        if (owner == null) return;
+
+        if (owner.placed()) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(Game.msg("Die Werkbank von Team " + owner.id()
+                    + " steht noch. Baue zuerst die Werkbank ab, dann das Stammbett.", NamedTextColor.RED));
+            return;
+        }
+        plugin.store().forgetBed(owner, b.getLocation());
+        plugin.store().save();
+    }
+
+    /** Explosions must not take the bench or a Stammbett that still belongs to a standing bench. */
+    private boolean protectFromExplosion(Block b) {
+        if (plugin.store().teamAt(b.getLocation()) != null) return true;
+        if (!Tag.BEDS.isTagged(b.getType())) return false;
+        TeamData owner = plugin.store().bedOwner(b.getLocation());
+        if (owner == null) return false;
+        if (owner.placed()) return true;
+        plugin.store().forgetBed(owner, b.getLocation());
+        plugin.store().save();
+        return false;
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent e) {
-        e.blockList().removeIf(b -> plugin.store().teamAt(b.getLocation()) != null);
+        e.blockList().removeIf(this::protectFromExplosion);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent e) {
-        e.blockList().removeIf(b -> plugin.store().teamAt(b.getLocation()) != null);
+        e.blockList().removeIf(this::protectFromExplosion);
     }
 
     @EventHandler(ignoreCancelled = true)

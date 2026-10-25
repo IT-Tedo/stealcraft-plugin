@@ -21,7 +21,8 @@ Wird sie geklaut, hat jeder nur noch ein Leben.
 - Jedes Team hat **nur eine Werkbank**.
 - Die Werkbank ist an das **Stammbett** des Teams gebunden. Das ist das **erste Bett**, das ein Teammitglied aufstellt.
   Die Werkbank darf nur im Umkreis von **50 Blöcken** davon stehen. Weitere Betten ändern daran nichts.
-  Geht das Stammbett kaputt, wird das nächste Bett, das ein Teammitglied aufstellt, zum Stammbett.
+  Das Stammbett kann nur abgebaut werden, wenn die Werkbank **nicht** steht. Erst Werkbank abbauen, dann das Bett.
+  Danach gibt es kein Stammbett mehr. Das nächste Bett, das ein Teammitglied aufstellt, wird das neue Stammbett, egal wo.
   Stand die Werkbank in dem Moment nicht, bekommt das Team am neuen Stammbett eine neue Werkbank. Die alten werden ungültig.
 - Stirbt jemand mit einer Werkbank im Inventar, wird sie ganz normal gedroppt.
 - Die Werkbank darf **nicht außerhalb der Weltbegrenzung** (Worldborder) stehen. Wer sie dort aufstellen will,

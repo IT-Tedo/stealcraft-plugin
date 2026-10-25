@@ -3,6 +3,15 @@
 Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## [Unveröffentlicht]
+
+### Geändert
+- Das Stammbett kann nur abgebaut werden, wenn die Werkbank nicht steht. Beim Abbau gibt es danach sofort kein Stammbett mehr.
+  Explosionen können das Stammbett nicht mehr entfernen, solange die Werkbank steht.
+
+### Behoben
+- Nach dem Abbau des Stammbetts konnte die Werkbank trotzdem am alten Ort platziert werden.
+
 ## [1.3.2] - 2026-10-16
 
 ### Geändert

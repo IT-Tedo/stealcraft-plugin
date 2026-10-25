@@ -145,6 +145,25 @@ public final class DataStore {
         return Math.max(0, plugin.getConfig().getDouble("bett-abstand", 50));
     }
 
+    /** The two halves of a bed touch each other; anything within this distance counts as the same bed. */
+    private static boolean sameBed(Location stored, Location block) {
+        return stored.getWorld() != null && stored.getWorld().equals(block.getWorld()) && stored.distance(block) <= 1.01;
+    }
+
+    /** The team whose Stammbett (either half) is at this block, or null. */
+    public TeamData bedOwner(Location block) {
+        if (block == null || block.getWorld() == null) return null;
+        for (TeamData t : teams.values()) {
+            for (Location bed : t.beds()) if (sameBed(bed, block)) return t;
+        }
+        return null;
+    }
+
+    /** Forgets the Stammbett at this block right away, so it can not come back by accident. */
+    public void forgetBed(TeamData team, Location block) {
+        team.beds().removeIf(bed -> sameBed(bed, block));
+    }
+
     /** Removes beds that no longer exist (broken, exploded), keeping the order of the rest. */
     public void pruneBeds(TeamData team) {
         Iterator<Location> it = team.beds().iterator();
