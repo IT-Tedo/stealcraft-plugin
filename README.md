@@ -76,6 +76,7 @@ Die Spieler müssen einmal auf dem Server gewesen sein, bevor man sie einem Team
 | `/sc werkbank <team> [spieler]` | OP | Werkbank geben. Ältere Werkbänke des Teams werden ungültig. |
 | `/sc wiederbeleben <spieler>` | OP | Ausgeschiedenen Spieler zurückholen und entbannen |
 | `/sc zurücksetzen <team>` | OP | Team wieder auf „Regeln noch nicht aktiv“ |
+| `/sc stammbett zurücksetzen <team>` | OP | Stammbett des Teams vergessen. Das nächste Bett, das ein Teammitglied aufstellt, wird das neue Stammbett. Eine stehende Werkbank bleibt stehen. |
 | `/sc anzeige` | OP | Werkbank-Anzeige sofort auslösen (zum Testen) |
 | `/sc nether sperren` / `öffnen` | OP | Nether sperren oder wieder öffnen. Wer hineingehen will, wird abgewiesen. Rausgehen bleibt möglich. |
 | `/sc end sperren` / `öffnen` | OP | End sperren oder wieder öffnen (gleiche Regeln wie das Nether) |

@@ -3,7 +3,10 @@
 Alle Änderungen am StealCraft-Plugin. Neueste Version oben.
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen nach [Semantic Versioning](https://semver.org/lang/de/).
 
-## [Unveröffentlicht]
+## [1.3.3] - 2026-10-25
+
+### Neu
+- Befehl `/sc stammbett zurücksetzen <team>` (nur OP): Vergisst das Stammbett eines Teams. Das nächste Bett, das ein Teammitglied aufstellt, wird das neue Stammbett. Eine stehende Werkbank bleibt stehen.
 
 ### Geändert
 - Das Stammbett kann nur abgebaut werden, wenn die Werkbank nicht steht. Beim Abbau gibt es danach sofort kein Stammbett mehr.
@@ -60,6 +63,7 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Ve
 - Herz-Anzeige in der Tab-Liste.
 - Befehle zum Verwalten von Teams, Werkbänken und Ausgeschiedenen.
 
+[1.3.3]: ../../compare/v1.3.2...v1.3.3
 [1.3.2]: ../../compare/v1.3.1...v1.3.2
 [1.3.1]: ../../compare/v1.3.0...v1.3.1
 [1.3.0]: ../../compare/v1.2.0...v1.3.0

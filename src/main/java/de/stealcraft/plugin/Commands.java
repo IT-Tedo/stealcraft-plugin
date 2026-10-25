@@ -60,6 +60,7 @@ public final class Commands implements TabExecutor {
             case "werkbank" -> giveBench(s, a);
             case "wiederbeleben" -> revive(s, a);
             case "zurücksetzen", "zuruecksetzen" -> reset(s, a);
+            case "stammbett" -> stammbett(s, a);
             case "nether" -> dimension(s, org.bukkit.World.Environment.NETHER, a);
             case "end" -> dimension(s, org.bukkit.World.Environment.THE_END, a);
             case "anzeige" -> {
@@ -83,6 +84,7 @@ public final class Commands implements TabExecutor {
         s.sendMessage(Component.text("/sc werkbank <team> [spieler]", NamedTextColor.YELLOW).append(Component.text(" – Werkbank geben (alte wird ungültig)", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc wiederbeleben <spieler>", NamedTextColor.YELLOW).append(Component.text(" – Ausgeschiedenen zurückholen", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc zurücksetzen <team>", NamedTextColor.YELLOW).append(Component.text(" – Regeln für ein Team wieder auf Anfang", NamedTextColor.GRAY)));
+        s.sendMessage(Component.text("/sc stammbett zurücksetzen <team>", NamedTextColor.YELLOW).append(Component.text(" – Stammbett eines Teams vergessen", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc anzeige", NamedTextColor.YELLOW).append(Component.text(" – Werkbank-Anzeige sofort auslösen", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc nether sperren|öffnen", NamedTextColor.YELLOW).append(Component.text(" – Nether sperren oder öffnen", NamedTextColor.GRAY)));
         s.sendMessage(Component.text("/sc end sperren|öffnen", NamedTextColor.YELLOW).append(Component.text(" – End sperren oder öffnen", NamedTextColor.GRAY)));
@@ -205,6 +207,27 @@ public final class Commands implements TabExecutor {
         ok(s, target.getName() + (was ? " ist wieder im Spiel." : " war nicht ausgeschieden, Bann wurde trotzdem aufgehoben."));
     }
 
+    // ---------- /sc stammbett zurücksetzen <team> ----------
+
+    /** Forgets a team's Stammbett. The next bed the team places becomes the new one. A standing bench is left alone. */
+    private void stammbett(CommandSender s, String[] a) {
+        boolean reset = a.length == 3 && (a[1].equalsIgnoreCase("zurücksetzen") || a[1].equalsIgnoreCase("zuruecksetzen"));
+        if (!reset) { err(s, "/sc stammbett zurücksetzen <team>"); return; }
+        TeamData t = plugin.store().team(a[2]);
+        if (t == null) { err(s, "Team " + a[2] + " gibt es nicht."); return; }
+
+        t.beds().clear();
+        plugin.store().save();
+
+        String note = t.placed() ? " Die Werkbank steht noch und bleibt stehen, bis sie abgebaut wird." : "";
+        ok(s, "Das Stammbett von Team " + t.id() + " ist zurückgesetzt. Das nächste Bett, das ein Teammitglied aufstellt, wird das neue Stammbett." + note);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (t.isMember(p.getUniqueId())) {
+                p.sendMessage(Game.msg("Euer Stammbett wurde zurückgesetzt. Stellt ein neues Bett auf, das wird das neue Stammbett.", NamedTextColor.YELLOW));
+            }
+        }
+    }
+
     // ---------- /sc zurücksetzen ----------
 
     private void reset(CommandSender s, String[] a) {
@@ -302,7 +325,10 @@ public final class Commands implements TabExecutor {
         if (a.length == 1) {
             opts.add("status");
             opts.add("hilfe");
-            if (admin) opts.addAll(List.of("team", "werkbank", "wiederbeleben", "zurücksetzen", "anzeige", "nether", "end"));
+            if (admin) opts.addAll(List.of("team", "werkbank", "wiederbeleben", "zurücksetzen", "stammbett", "anzeige", "nether", "end"));
+        } else if (admin && a[0].equalsIgnoreCase("stammbett")) {
+            if (a.length == 2) opts.addAll(List.of("zurücksetzen"));
+            else if (a.length == 3) teamIds(opts);
         } else if (admin && a[0].equalsIgnoreCase("team")) {
             if (a.length == 2) opts.addAll(List.of("erstellen", "hinzufügen", "entfernen", "löschen", "liste"));
             else if (a.length == 3 && !a[1].equalsIgnoreCase("erstellen") && !a[1].equalsIgnoreCase("entfernen")) teamIds(opts);
